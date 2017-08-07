@@ -3,11 +3,11 @@ image: docker:latest
 develop:
   stage: build
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.ctc.com
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
 
-    - docker build --build-arg https_proxy -t docker.ctc.com/openshift/minio:$CI_BUILD_REF_NAME .
-    - docker push docker.ctc.com/openshift/minio:$CI_BUILD_REF_NAME
-    - docker rmi docker.ctc.com/openshift/minio:$CI_BUILD_REF_NAME
+    - docker build --build-arg http_proxy --build-arg https_proxy -t $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME .
+    - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+    - docker rmi $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
   only:
     - branches
   except:
@@ -18,13 +18,12 @@ develop:
 latest:
   stage: build
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN docker.ctc.com
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
 
-    - docker build --build-arg https_proxy -t docker.ctc.com/openshift/minio .
-    - docker push docker.ctc.com/openshift/minio
-    - docker rmi docker.ctc.com/openshift/minio
+    - docker build --build-arg http_proxy --build-arg https_proxy -t $CI_REGISTRY_IMAGE .
+    - docker push $CI_REGISTRY_IMAGE
+    - docker rmi $CI_REGISTRY_IMAGE
   only:
     - master
   tags:
     - containers
-
