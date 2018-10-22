@@ -11,12 +11,11 @@ RUN mkdir -p /minio/bin \
 
 VOLUME ["/minio/data", "/minio/config"]
 
-RUN chgrp -R 0 /minio \
- && chmod -R g+rwX /minio
+RUN chown 1001:0 -R /minio \
+ && chmod -R g+rwX  /minio
 
 EXPOSE 9000
 
-USER 100001
+USER 1001
 
 CMD ["/minio/bin/minio", "server", "--config-dir=/minio/config", "/minio/data"]
-
