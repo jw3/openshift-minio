@@ -9,9 +9,8 @@ RUN mkdir -p /minio/bin \
  && curl -sL -o /minio/bin/minio $MINIO_DOWNLOAD_URL \
  && chmod +x /minio/bin/minio
 
-VOLUME ["/minio/data", "/minio/config"]
-
-RUN chown 1001:0 -R /minio \
+RUN mkdir -p /minio \
+ && chown 1001:0 -R /minio \
  && chmod -R g+rwX  /minio
 
 EXPOSE 9000
