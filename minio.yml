@@ -1,0 +1,58 @@
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: minio
+  name: minio
+spec:
+  replicas: 1
+  selector:
+    app: minio
+    deploymentconfig: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+        deploymentconfig: minio
+    spec:
+      containers:
+        - env:
+            - name: MINIO_ACCESS_KEY
+              value: defaultkey
+            - name: MINIO_SECRET_KEY
+              value: defaultkey
+          image: >-
+            jwiii/openshift-minio
+          name: minio
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: minio
+  name: minio
+spec:
+  ports:
+    - name: 9000-tcp
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+  selector:
+    app: minio
+    deploymentconfig: minio
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: minio
+  name: minio
+spec:
+  port:
+    targetPort: 9000-tcp
+  to:
+    kind: Service
+    name: minio
+    weight: 100
+  wildcardPolicy: None
