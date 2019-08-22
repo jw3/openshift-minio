@@ -13,7 +13,6 @@ RUN mkdir -p /minio \
  && chown 1001:0 -R /minio \
  && chmod -R g+rwX  /minio
 
-VOLUME ["/minio/data", "/minio/config"]
 EXPOSE 9000
 
 USER 1001
